@@ -18,34 +18,34 @@ void AObsPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Activate();
-	
-	FTimerHandle Handle;
-	GetWorld()->GetTimerManager().SetTimer(Handle, this, &AObsPlatform::DeActivate, 3.f);
+	// Activate();
+	//
+	// FTimerHandle Handle;
+	// GetWorld()->GetTimerManager().SetTimer(Handle, this, &AObsPlatform::DeActivate, 3.f);
+
+	UpdateAnim();
 }
 
 void AObsPlatform::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	CurAnimTime = FMath::Clamp(CurAnimTime + DeltaSeconds, 0, AnimTime);
+	CurAnimTime = FMath::Clamp(CurAnimTime + (bActivated ? DeltaSeconds : -DeltaSeconds), 0, AnimTime);
 
-	Mesh->SetRelativeLocation(TargetOffset * FMath::Abs((!bActivated) - (CurAnimTime / AnimTime)));
+	Mesh->SetRelativeLocation(TargetOffset * (CurAnimTime / AnimTime));
 }
 
 void AObsPlatform::Activate()
 {
 	Super::Activate();
-
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, "Platform Activate");
+	
 	UpdateAnim();
 }
 
 void AObsPlatform::DeActivate()
 {
 	Super::DeActivate();
-
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "Platform DeActivate");
+	
 	UpdateAnim();
 }
 
@@ -55,7 +55,8 @@ void AObsPlatform::UpdateAnim()
 
 	float Dist = FVector::Dist(Mesh->GetRelativeLocation(), Target);
 
-	float Percentage = 1.f - (Dist / TargetOffset.Length());
-	
+	float Percentage = (Dist / TargetOffset.Length());
+	Percentage = (bActivated ? 1.f - Percentage : Percentage);
+
 	CurAnimTime = AnimTime * Percentage;
 }

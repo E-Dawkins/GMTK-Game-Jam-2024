@@ -3,6 +3,8 @@
 
 #include "Obstacle.h"
 
+#include "ToneManagerSubsystem.h"
+
 // Sets default values
 AObstacle::AObstacle()
 {
@@ -14,6 +16,15 @@ void AObstacle::BeginPlay()
 	Super::BeginPlay();
 
 	// Bind functions here
+	if (auto ToneManager = GetWorld()->GetSubsystem<UToneManagerSubsystem>())
+	{
+		BindNoteDelegate(ToneManager->OnFNotePlayed, (ActivationNote == ENotes_F));
+		BindNoteDelegate(ToneManager->OnGNotePlayed, (ActivationNote == ENotes_G));
+		BindNoteDelegate(ToneManager->OnANotePlayed, (ActivationNote == ENotes_A));
+		BindNoteDelegate(ToneManager->OnCNotePlayed, (ActivationNote == ENotes_C));
+		BindNoteDelegate(ToneManager->OnDNotePlayed, (ActivationNote == ENotes_D));
+	}
+
 }
 
 void AObstacle::Activate()
@@ -25,4 +36,3 @@ void AObstacle::DeActivate()
 {
 	bActivated = false;
 }
-
