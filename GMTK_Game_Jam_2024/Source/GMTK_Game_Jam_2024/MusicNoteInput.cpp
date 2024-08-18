@@ -8,6 +8,8 @@
 
 AMusicNoteInput::AMusicNoteInput()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
 	RootMesh = CreateDefaultSubobject<UStaticMeshComponent>("Root Mesh");
 	SetRootComponent(RootMesh);
 
@@ -23,20 +25,27 @@ void AMusicNoteInput::BeginPlay()
 	Trigger->OnComponentBeginOverlap.AddDynamic(this, &AMusicNoteInput::BeginComponentOverlap);
 	Trigger->OnComponentEndOverlap.AddDynamic(this, &AMusicNoteInput::EndComponentOverlap);
 
-	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
-	{
-		EnableInput(PlayerController);
-		InputComponent->BindAction("Interact", IE_Pressed, this, &AMusicNoteInput::OnInteract);
-	}
-
 	PCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	PController = Cast<APlayerController>(PCharacter->GetController());
 
 	NoteInputPtr = CreateWidget(GetWorld(), NoteInputClass);
 }
 
+void AMusicNoteInput::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bPlayerInTrigger)
+	{
+		if (PController->WasInputKeyJustPressed(EKeys::E)) // yes, this is hardcoded (eww)
+		{
+			OnInteract();
+		}
+	}
+}
+
 void AMusicNoteInput::BeginComponentOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor == PCharacter)
 	{
@@ -55,11 +64,8 @@ void AMusicNoteInput::EndComponentOverlap(UPrimitiveComponent* OverlappedCompone
 
 void AMusicNoteInput::OnInteract()
 {
-	if (bPlayerInTrigger)
-	{
-		NoteInputPtr->AddToViewport();
+	NoteInputPtr->AddToViewport();
         
-		PController->SetInputMode(FInputModeUIOnly());
-		PController->SetShowMouseCursor(true);
-	}
+	PController->SetInputMode(FInputModeUIOnly());
+	PController->SetShowMouseCursor(true);
 }

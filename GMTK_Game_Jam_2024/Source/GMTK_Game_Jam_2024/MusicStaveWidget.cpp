@@ -9,6 +9,12 @@ void UMusicStaveWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	UE_LOG(LogTemp, Warning, TEXT("Construct"))
+
+	if (UToneManagerSubsystem* ToneManager = GetWorld()->GetSubsystem<UToneManagerSubsystem>())
+	{
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(ToneManager);
+		ToneManager->PlayEndOfNotes();
+	}
 }
 
 void UMusicStaveWidget::PlayFMajorPentatonicScale()
