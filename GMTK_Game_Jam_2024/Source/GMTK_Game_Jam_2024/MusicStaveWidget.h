@@ -24,4 +24,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<UWidget*> NoteSliderWidgets;
+
+	UPROPERTY(EditAnywhere)
+	float TimeBetweenNotes = 2.f;
 };

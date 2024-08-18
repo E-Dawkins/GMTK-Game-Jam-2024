@@ -15,39 +15,35 @@ void UMusicStaveWidget::PlayFMajorPentatonicScale()
 {
 	if (UToneManagerSubsystem* ToneManager = GetWorld()->GetSubsystem<UToneManagerSubsystem>())
 	{
+		float TimerStart = 0.f;
+		
 		for (UWidget* SliderWidget : NoteSliderWidgets)
 		{
-			USlider* Slider = (USlider*)SliderWidget;
+			FTimerDelegate TimerDelegate;
+			TimerStart += TimeBetweenNotes;
 
-			if (Slider)
+			if (auto Slider = Cast<USlider>(SliderWidget))
 			{
-				switch (int NoteValue = Slider->Value)
+				switch(int Temp = Slider->GetValue())
 				{
-				case 1:
-					ToneManager->PlayFTone();
-						break;
-				case 2:
-					ToneManager->PlayGTone();
-						break;
-				case 3:
-					ToneManager->PlayATone();
-						break;
-				case 4:
-					ToneManager->PlayCTone();
-						break;
-				case 5:
-					ToneManager->PlayDTone();
-						break;
-				default:
-					UE_LOG(LogTemp, Warning, TEXT("MusicStaveWidget : No Note Selected"))
-						break;
+					case 1: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayFTone); break;
+					case 2: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayGTone); break;
+					case 3: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayATone); break;
+					case 4: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayCTone); break;
+					case 5: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayDTone); break;
+					default: TimerDelegate.BindUObject(ToneManager, &UToneManagerSubsystem::PlayEndOfNotes); break;
 				}
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Slider not found"))
+				UE_LOG(LogTemp, Warning, TEXT("Slider not found"));
 			}
 
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, TimerStart, false);
 		}
+
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, ToneManager, &UToneManagerSubsystem::PlayEndOfNotes, TimerStart + TimeBetweenNotes);
 	}
 }

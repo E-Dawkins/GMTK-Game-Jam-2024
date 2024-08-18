@@ -45,3 +45,9 @@ void UToneManagerSubsystem::PlayDTone()
 	UE_LOG_REF(ToneManagerSubsystem, Warning, TEXT("ToneManagerSubsystem::DTone"));
 	OnDNotePlayed.Broadcast();
 }
+
+void UToneManagerSubsystem::PlayEndOfNotes()
+{
+	UE_LOG_REF(ToneManagerSubsystem, Warning, TEXT("ToneManagerSubsystem::EndOfNotes"));
+	OnEndOfNotes.Broadcast();
+}

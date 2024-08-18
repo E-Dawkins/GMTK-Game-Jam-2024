@@ -15,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGNotePlayed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnANotePlayed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCNotePlayed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDNotePlayed);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndOfNotes);
 
 UCLASS()
 class GMTK_GAME_JAM_2024_API UToneManagerSubsystem : public UWorldSubsystem
@@ -41,10 +41,13 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnFNotePlayed OnDNotePlayed;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnEndOfNotes OnEndOfNotes;
 
 	void PlayFTone();
 	void PlayGTone();
 	void PlayATone();
 	void PlayCTone();
 	void PlayDTone();
+	void PlayEndOfNotes();
 };

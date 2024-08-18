@@ -23,6 +23,7 @@ void AObstacle::BeginPlay()
 		BindNoteDelegate(ToneManager->OnANotePlayed, (ActivationNote == ENotes_A));
 		BindNoteDelegate(ToneManager->OnCNotePlayed, (ActivationNote == ENotes_C));
 		BindNoteDelegate(ToneManager->OnDNotePlayed, (ActivationNote == ENotes_D));
+		BindNoteDelegate(ToneManager->OnEndOfNotes, false);
 	}
 
 }
