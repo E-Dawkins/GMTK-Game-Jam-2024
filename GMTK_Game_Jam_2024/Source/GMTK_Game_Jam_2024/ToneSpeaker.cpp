@@ -22,7 +22,10 @@ void AToneSpeaker::BeginPlay()
 	if (UToneManagerSubsystem* ToneManager = GetWorld()->GetSubsystem<UToneManagerSubsystem>())
 	{
 		ToneManager->OnFNotePlayed.AddDynamic(this, &AToneSpeaker::F4NotePlayed);
+		ToneManager->OnGNotePlayed.AddDynamic(this, &AToneSpeaker::G4NotePlayed);
+		ToneManager->OnANotePlayed.AddDynamic(this, &AToneSpeaker::A4NotePlayed);
 		ToneManager->OnCNotePlayed.AddDynamic(this, &AToneSpeaker::C4NotePlayed);
+		ToneManager->OnDNotePlayed.AddDynamic(this, &AToneSpeaker::D4NotePlayed);
 
 	}
 
