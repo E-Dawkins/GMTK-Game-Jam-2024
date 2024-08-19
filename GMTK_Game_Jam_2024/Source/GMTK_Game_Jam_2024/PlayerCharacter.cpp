@@ -3,6 +3,8 @@
 
 #include "PlayerCharacter.h"
 
+#include "Kismet/GameplayStatics.h"
+
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,6 +20,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("MouseUp", this, &APlayerCharacter::MouseUp);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("RestartLevel", IE_Pressed, this, &APlayerCharacter::RestartLevel);
+	PlayerInputComponent->BindAction("MainMenu", IE_Pressed, this, &APlayerCharacter::MainMenu);
 }
 
 void APlayerCharacter::MoveRight(float Value)
@@ -38,4 +42,14 @@ void APlayerCharacter::MouseRight(float Value)
 void APlayerCharacter::MouseUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void APlayerCharacter::RestartLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), *UGameplayStatics::GetCurrentLevelName(GetWorld()));
+}
+
+void APlayerCharacter::MainMenu()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
 }
