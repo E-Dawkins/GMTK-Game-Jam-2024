@@ -18,4 +18,13 @@ protected:
 	// Doing setup in the C++ constructor is not as
 	// useful as using NativeConstruct.
 	virtual void NativeConstruct() override;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayScale")
+	void PlayFMajorPentatonicScale();
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<UWidget*> NoteSliderWidgets;
+
+	UPROPERTY(EditAnywhere)
+	float TimeBetweenNotes = 2.f;
 };
