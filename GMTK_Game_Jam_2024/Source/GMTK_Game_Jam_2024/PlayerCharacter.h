@@ -31,4 +31,11 @@ protected:
 	void MouseUp(float Value);
 
 	// <-- Axis Mappings
+
+	// Action Mappings -->
+
+	void RestartLevel();
+	void MainMenu();
+	
+	// <-- Action Mappings
 };
